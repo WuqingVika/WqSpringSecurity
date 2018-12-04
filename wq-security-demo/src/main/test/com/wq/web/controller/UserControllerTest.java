@@ -35,8 +35,13 @@ public class UserControllerTest {
                 .param("age","24")
                 .param("ageTo","28")
                 //.param("nickname","wuqingvika")
+                /*.param("size","15")//每页15条
+                .param("page","3")//三页
+                .param("sort","age,desc")*///排序按年齡降序
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(3));
+        //jsonPath github搜 有说明 $代表传来的整个json根 因为我们usercontroller返回的是json数组所以用length();
+        //具体见https://github.com/json-path/JsonPath
     }
 }
