@@ -13,6 +13,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 //导入静态方法 这样就可以直接写方法名不用再一长串写了
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -71,5 +75,41 @@ public class UserControllerTest {
         mockMvc.perform(get("/user/a")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void whenCreateSuccess() throws Exception {
+        Date date=new Date();
+        System.out.println("时间戳:"+date.getTime());
+        String content = "{\"username\":\"wuqingvika\",\"password\":\"\",\"birthday\":"+date.getTime()+"}";
+        String result = mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(content))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println("返回结果:" + result);
+    }
+
+    @Test
+    public void whenUpdateSuccess() throws Exception {
+
+        Date date = new Date(LocalDateTime.now().plusYears(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        System.out.println(date.getTime());
+        String content = "{\"id\":\"1\", \"username\":\"wuqingvika\",\"password\":null,\"birthday\":"+date.getTime()+"}";
+        String reuslt = mockMvc.perform(put("/user/1").contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(content))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println(reuslt);
+    }
+
+    @Test
+    public void whenDeleteSuccess() throws Exception {
+        mockMvc.perform(delete("/user/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
     }
 }
