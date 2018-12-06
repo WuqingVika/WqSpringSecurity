@@ -54,7 +54,8 @@ public class UserController {
     //@RequestMapping(value = "/user/{idhh:\\d+}", method = RequestMethod.GET)
     @GetMapping(value = "/{idhh:\\d+}")
     public User getInfo(@PathVariable(name = "idhh") String id) {
-        System.out.println(ReflectionToStringBuilder.toString(id));
+       // throw new RuntimeException("dfsdfklsdf");
+       System.out.println(ReflectionToStringBuilder.toString(id));
         List<User> users = new ArrayList<>();
         users.add(new User("wuqingvika", "21"));
         users.add(new User("wuqingvika", "23"));
