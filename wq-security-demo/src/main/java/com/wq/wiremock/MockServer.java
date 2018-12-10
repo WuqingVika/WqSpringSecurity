@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.wq.wiremock;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -16,6 +13,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 
+/**
+ * @author wuqingvika
+ *
+ */
 public class MockServer {
 
 	/**
@@ -23,7 +24,9 @@ public class MockServer {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		configureFor(8062);
+        System.out.println("这里一直报 java.lang.ClassNotFoundException: org.apache.http.HttpEntity按理说该导的包都导了 真心不会玩 心里苦");
+        configureFor(8062); //官网使用参考 http://wiremock.org/docs/running-standalone/
+		//java -jar wiremock-standalone-2.19.0.jar --port 8062
 		removeAllMappings();
 
 		mock("/order/1", "01");
