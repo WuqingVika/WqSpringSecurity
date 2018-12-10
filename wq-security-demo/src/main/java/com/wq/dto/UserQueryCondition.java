@@ -1,12 +1,16 @@
 package com.wq.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 用户查询条件
  * Created by qwu on 2018/12/4.
  */
 public class UserQueryCondition {
     private String username;
-    private int age;//
+    @ApiModelProperty(value = "用户年龄起始值")
+    private int age;
+    @ApiModelProperty(value = "用户年龄终止值")
     private int ageTo;
 
     public String getUsername() {

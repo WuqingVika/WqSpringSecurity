@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.wq.dto.User;
 import com.wq.dto.UserQueryCondition;
 import com.wq.exception.UserNotExistException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import java.util.List;
 public class UserController {
 
     @PostMapping
+    @ApiOperation(value = "创建用户")
     public User create(@Valid @RequestBody User user, BindingResult errors) {
         if (errors.hasErrors()) {
             errors.getAllErrors().stream().forEach(error -> System.out.println("error---->" + error.getDefaultMessage()));
@@ -53,7 +56,7 @@ public class UserController {
     //idhh只能接收数字
     //@RequestMapping(value = "/user/{idhh:\\d+}", method = RequestMethod.GET)
     @GetMapping(value = "/{idhh:\\d+}")
-    public User getInfo(@PathVariable(name = "idhh") String id) {
+    public User getInfo(@ApiParam("用户id") @PathVariable(name = "idhh") String id) {
        // throw new RuntimeException("dfsdfklsdf");
        System.out.println(ReflectionToStringBuilder.toString(id));
         List<User> users = new ArrayList<>();

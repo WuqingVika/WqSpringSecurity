@@ -24,12 +24,12 @@ public class WebConfig extends WebMvcConfigurerAdapter   {
     @Autowired
     private TimeInterceptor timeInterceptor;
 
-    @Override
+    /*@Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(timeInterceptor);//添加拦截器
     }
-
-    @Bean
+*/
+    /*@Bean
     public FilterRegistrationBean timeFilter() {
 
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -38,15 +38,15 @@ public class WebConfig extends WebMvcConfigurerAdapter   {
         registrationBean.setFilter(timeFilter);
 
         List<String> urls = new ArrayList<>();
-        urls.add("/*");
+        urls.add("*//*");
         registrationBean.setUrlPatterns(urls);
         return registrationBean;
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
+        registry.addResourceHandler("*//**")
                 .addResourceLocations("classpath:/resources/");//META-INF/
         super.addResourceHandlers(registry);
-    }
+    }*/
 }
