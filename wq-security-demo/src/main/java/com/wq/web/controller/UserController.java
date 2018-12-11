@@ -10,6 +10,10 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +28,13 @@ import java.util.List;
 @RestController//用来提供restful服务的
 public class UserController {
 
+    /*public Object getCurrentUser(Authentication authentication){
+        return authentication;*//*SecurityContextHolder.getContext().getAuthentication();*//*
+    }*/
+    @GetMapping("/me")
+    public Object getCurrentUser(@AuthenticationPrincipal UserDetails user){//只获取我们想要的authentication里Principal对象。不需要像上面那样返回全部
+        return user;
+    }
     @PostMapping
     @ApiOperation(value = "创建用户")
     public User create(@Valid @RequestBody User user, BindingResult errors) {
