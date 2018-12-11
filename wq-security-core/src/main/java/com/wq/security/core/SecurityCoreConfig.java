@@ -1,5 +1,6 @@
-package com.wq.security.core.properties;
+package com.wq.security.core;
 
+import com.wq.security.core.properties.SecurityProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

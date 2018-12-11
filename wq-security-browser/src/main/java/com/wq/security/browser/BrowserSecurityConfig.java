@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 /**
  * Created by qwu on 2018/12/10.
@@ -17,6 +19,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Autowired
     private SecurityProperties securityProperties;
+
+    @Autowired
+    private AuthenticationSuccessHandler wqAuthenticationSuccessHandler;
+   @Autowired
+   private AuthenticationFailureHandler wqAuthenticationFailureHandler;
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();//这里也可以用自定义的加密的(只要实现加密解密方法就行) 或者Md5
@@ -34,6 +41,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter{
                 //.loginPage("/wq-signIn.html")
                 .loginPage("/authentication/require")
                 .loginProcessingUrl("/authentication/form")//踩坑:这里没有这句话 登录不能跳转之前请求了
+                .successHandler(wqAuthenticationSuccessHandler)//自个写的成功处理器
+                .failureHandler(wqAuthenticationFailureHandler)
                 .and()
                 .authorizeRequests()
                // .antMatchers("/wq-signIn.html")
