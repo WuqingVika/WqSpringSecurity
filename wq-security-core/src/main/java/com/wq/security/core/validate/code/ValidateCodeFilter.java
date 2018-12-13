@@ -1,10 +1,13 @@
 package com.wq.security.core.validate.code;
 
+import com.wq.security.core.properties.SecurityProperties;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -15,21 +18,42 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 验证图形码数字是否输入正确
  * Created by qwu on 2018/12/11.
  */
-public class ValidateCodeFilter extends OncePerRequestFilter {
+public class ValidateCodeFilter extends OncePerRequestFilter implements InitializingBean {//实现这个接口的目的是为了在其他参数组装完毕后 去初始化我们的urls的值
     private AuthenticationFailureHandler authenticationFailureHandler;
 
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
+    private Set<String> urls= new HashSet<>();
+    private SecurityProperties securityProperties;
+
+    private AntPathMatcher pathMatcher=new AntPathMatcher();//这个是用/user/*去匹配/user/1等请求的
+
+    @Override
+    public void afterPropertiesSet() throws ServletException {
+        super.afterPropertiesSet();
+        String[] configUrls=StringUtils.split(securityProperties.getCode().getImage().getUrl(),",");
+        for (String configUrl:configUrls) {
+            urls.add(configUrl);
+        }
+        urls.add("/authentication/form");//因为登录的验证码是必需的 所以这里直接加上了
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        if (StringUtils.equals("/authentication/form", request.getRequestURI())
-                && StringUtils.equalsIgnoreCase(request.getMethod(), "post")) {
+        boolean action=false;
+        for (String url:urls){
+            if(pathMatcher.match(url,request.getRequestURI())){
+                action=true;
+            }
+        }
+        if (action) {
             //如果是表单请求且是post请求，即代表用户点击登录按钮
             try {
                 validate(new ServletWebRequest(request));
@@ -78,5 +102,13 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
 
     public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
         this.authenticationFailureHandler = authenticationFailureHandler;
+    }
+
+    public SecurityProperties getSecurityProperties() {
+        return securityProperties;
+    }
+
+    public void setSecurityProperties(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
     }
 }

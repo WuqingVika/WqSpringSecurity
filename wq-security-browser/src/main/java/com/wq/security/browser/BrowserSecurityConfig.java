@@ -42,6 +42,8 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         //2 自定义登录页面
         ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
         validateCodeFilter.setAuthenticationFailureHandler(wqAuthenticationFailureHandler);
+        validateCodeFilter.setSecurityProperties(securityProperties);
+        validateCodeFilter.afterPropertiesSet();
         http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)//加在用户名密码校验之前
                 .formLogin()
                 //.loginPage("/wq-signIn.html")
