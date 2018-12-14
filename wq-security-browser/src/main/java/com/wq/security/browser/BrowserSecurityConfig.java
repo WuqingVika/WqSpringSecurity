@@ -2,16 +2,21 @@ package com.wq.security.browser;
 
 import com.wq.security.core.properties.SecurityProperties;
 import com.wq.security.core.validate.code.ValidateCodeFilter;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
 
 /**
  * Created by qwu on 2018/12/10.
@@ -26,12 +31,22 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationSuccessHandler wqAuthenticationSuccessHandler;
     @Autowired
     private AuthenticationFailureHandler wqAuthenticationFailureHandler;
-
+    @Autowired
+    private DataSource dataSource;
+    @Autowired
+    private UserDetailsService userDetailsService;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();//这里也可以用自定义的加密的(只要实现加密解密方法就行) 或者Md5
     }
 
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl tokenRepository=new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        //tokenRepository.setCreateTableOnStartup(true);//在启动的时候创建表
+        return tokenRepository;
+    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //1.SpringSecurity默认的登录方式
@@ -51,6 +66,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/authentication/form")//踩坑:这里没有这句话 登录不能跳转之前请求了
                 .successHandler(wqAuthenticationSuccessHandler)//自个写的成功处理器
                 .failureHandler(wqAuthenticationFailureHandler)
+                .and()
+                .rememberMe()
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
+                .userDetailsService(userDetailsService)//拿到用户名后登录
                 .and()
                 .authorizeRequests()
                 // .antMatchers("/wq-signIn.html")
