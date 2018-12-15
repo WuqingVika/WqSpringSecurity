@@ -74,7 +74,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // .antMatchers("/wq-signIn.html")
-                .antMatchers("/authentication/require", securityProperties.getBrowser().getLoginPage(), "/code/image")//这里登录页也不需要权限验证、图形验证码也不需要
+                .antMatchers("/authentication/require", securityProperties.getBrowser().getLoginPage(), "/code/*")//这里登录页也不需要权限验证、图形/短信验证码也不需要
                 .permitAll()//wq-signIn.html也要验证 如果不配取消授权会陷入死循环
                 .anyRequest().authenticated()//如果不加下面一句在登录时，Could not verify the provided CSRF token because your session was not found.
                 .and().csrf().disable();

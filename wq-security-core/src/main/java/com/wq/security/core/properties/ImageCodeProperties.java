@@ -4,51 +4,27 @@ package com.wq.security.core.properties;
  * 图形码属性
  * Created by qwu on 2018/12/11.
  */
-public class ImageCodeProperties {
-    private int width=67;
-    private int height=23;
-    private int length;//验证码数字位数
-    private int expireIn;//失效时间单位秒
+public class ImageCodeProperties extends SmsCodeProperties {
 
-    private String url;
+    public ImageCodeProperties() {
+        setLength(4);
+    }
+
+    private int width = 67;
+    private int height = 23;
 
     public int getWidth() {
         return width;
     }
-
     public void setWidth(int width) {
         this.width = width;
     }
-
     public int getHeight() {
         return height;
     }
-
     public void setHeight(int height) {
         this.height = height;
     }
 
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public int getExpireIn() {
-        return expireIn;
-    }
-
-    public void setExpireIn(int expireIn) {
-        this.expireIn = expireIn;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }
+
