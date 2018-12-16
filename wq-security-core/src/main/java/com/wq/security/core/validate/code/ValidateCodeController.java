@@ -44,41 +44,6 @@ public class ValidateCodeController {
         System.out.println("验证码生成中---->"+request.getRequestURI()+"  type-->"+type);
         validateCodeProcessorHolder.findValidateCodeProcessor(type).create(new ServletWebRequest(request, response));
     }
-   /* public static final String SESSION_KEY = "SESSION_KEY_IMAGE_CODE";
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
-    @Autowired
-    private ValidateCodeGenerator imageCodeGenerator;
-    @Autowired
-    private ValidateCodeGenerator smsCodeGenerator;
-    @Autowired
-    private SmsCodeSender smsCodeSender;
-    *//**
-     * 请求生成一个随机图形验证码
-     *
-     * @param request
-     * @param response
-     * @throws IOException
-     *//*
-    @GetMapping("/code/image")
-    public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ImageCode imageCode = (ImageCode) imageCodeGenerator.generate(request);
-        sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY, imageCode);
-        ImageIO.write(imageCode.getImage(), "JPEG", response.getOutputStream());
-    }
-
-    *//**
-     * 短信验证
-     * @param request
-     * @param response
-     * @throws IOException
-     *//*
-    @GetMapping("/code/sms")
-    public void createSmsCode(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletRequestBindingException {
-        ValidateCode smsCode = smsCodeGenerator.generate(request);
-        sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY, smsCode);
-        String mobile = ServletRequestUtils.getRequiredStringParameter(request, "mobile");
-        smsCodeSender.send(mobile,smsCode.getCode());
-    }*/
 
 
 }
