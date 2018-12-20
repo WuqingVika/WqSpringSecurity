@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 
 /**
@@ -39,7 +40,8 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
     private UserDetailsService userDetailsService;
     @Autowired
     private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
-
+    @Autowired
+    private SpringSocialConfigurer wqSpringSocialConfigurer;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();//这里也可以用自定义的加密的(只要实现加密解密方法就行) 或者Md5
@@ -77,6 +79,8 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
         http.apply(validateCodeSecurityConfig)
                 .and()
                 .apply(smsCodeAuthenticationSecurityConfig)
+                .and()
+                .apply(wqSpringSocialConfigurer)
                 .and()
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())

@@ -41,9 +41,7 @@ public class ValidateCodeController {
     @GetMapping(SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/{type}")
     public void createCode(HttpServletRequest request, HttpServletResponse response, @PathVariable String type)
             throws Exception {
-        System.out.println("验证码生成中---->"+request.getRequestURI()+"  type-->"+type);
+        System.out.println("验证码生成中---->" + request.getRequestURI() + "  type-->" + type);
         validateCodeProcessorHolder.findValidateCodeProcessor(type).create(new ServletWebRequest(request, response));
     }
-
-
 }
